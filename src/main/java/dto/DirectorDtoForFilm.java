@@ -1,24 +1,21 @@
 package dto;
 
 
-import java.util.List;
 import java.util.Objects;
 
-public class DirectorDto {
+public class DirectorDtoForFilm {
 
     private Long id;
     private String name;
     private String birthDate;
-    private List<FilmDto> filmsDto;
 
-    public DirectorDto(Long id, String name, String birthDate, List<FilmDto> filmsDto) {
+    public DirectorDtoForFilm(Long id, String name, String birthDate) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
-        this.filmsDto = filmsDto;
     }
 
-    public DirectorDto() {
+    public DirectorDtoForFilm() {
     }
 
     public Long getId() {
@@ -45,19 +42,11 @@ public class DirectorDto {
         this.birthDate = birthDate;
     }
 
-    public List<FilmDto> getFilmsDto() {
-        return filmsDto;
-    }
-
-    public void setFilmsDto(List<FilmDto> filmsDto) {
-        this.filmsDto = filmsDto;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DirectorDto that = (DirectorDto) o;
+        DirectorDtoForFilm that = (DirectorDtoForFilm) o;
         return Objects.equals(id, that.id);
     }
 

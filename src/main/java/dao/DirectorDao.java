@@ -11,64 +11,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static dao.SqlForDirector.*;
+
 public class DirectorDao implements Dao<Long, Director> {
 
     private DataSource dataSource;
 
     private static final String DIRECTOR_ID = "id_director";
-    private static final String CREATE_SQL = """
-            INSERT INTO director (name_director, birth_date_director)
-            VALUES (?, ?)
-            """;
-    private static final String UPDATE_SQL = """
-            UPDATE director
-            SET name_director = ?,
-                birth_date_director = ?
-            WHERE id_director = ?
-            """;
-    private static final String DELETE_SQL = """
-            DELETE FROM director
-            WHERE id_director = ?
-            """;
-    private static final String FIND_ALL_SQL = """
-            SELECT director.id_director,
-                name_director,
-                birth_date_director,
-                id_film,
-                name_film,
-                country,
-                date_realize,
-                genre
-            FROM director
-            LEFT JOIN public.film f on director.id_director = f.id_director
-            """;
-    private static final String FIND_BY_ID = """
-            SELECT director.id_director,
-                name_director,
-                birth_date_director,
-                id_film,
-                name_film,
-                country,
-                date_realize,
-                genre
-            FROM director
-            LEFT JOIN public.film f on director.id_director = f.id_director
-            WHERE director.id_director = ?
-            """;
-    private static final String FIND_BY_NAME_DIRECTOR = """
-            SELECT director.id_director,
-                name_director,
-                birth_date_director,
-                id_film,
-                name_film,
-                country,
-                date_realize,
-                genre
-            FROM director
-            LEFT JOIN public.film f on director.id_director = f.id_director
-            WHERE director.name_director = ?
-            """;
-
 
     public DirectorDao() {
         this.dataSource = new DataSource();
@@ -82,8 +31,8 @@ public class DirectorDao implements Dao<Long, Director> {
     public Director create(Director object) {
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_SQL, Statement.RETURN_GENERATED_KEYS)) {
-
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_SQL.getQuery(),
+                     Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setObject(1, object.getName());
             preparedStatement.setObject(2, object.getBirthDate());
@@ -108,7 +57,7 @@ public class DirectorDao implements Dao<Long, Director> {
 
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL.getQuery())) {
 
             preparedStatement.setObject(1, object.getName());
             preparedStatement.setObject(2, object.getBirthDate());
@@ -128,7 +77,7 @@ public class DirectorDao implements Dao<Long, Director> {
     public boolean delete(Long id) {
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SQL.getQuery())) {
 
             preparedStatement.setObject(1, id);
 
@@ -145,7 +94,7 @@ public class DirectorDao implements Dao<Long, Director> {
     public Optional<Director> findById(Long id) {
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID.getQuery())) {
 
             preparedStatement.setLong(1, id);
 
@@ -176,7 +125,7 @@ public class DirectorDao implements Dao<Long, Director> {
 
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_NAME_DIRECTOR)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_NAME_DIRECTOR.getQuery())) {
 
             preparedStatement.setString(1, name);
 
@@ -207,7 +156,7 @@ public class DirectorDao implements Dao<Long, Director> {
         Map<Long, Director> directorMap = new HashMap<>();
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_SQL.getQuery())) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 

@@ -41,18 +41,13 @@ public class DirectorServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Long id = getId(req);
-
         PrintWriter writer = resp.getWriter();
         resp.setContentType(CONTENT_TYPE);
 
-        if (id == -1) {
+        try {
 
-            List<DirectorDto> directorDtos = directorService.findAll();
+            Long id = getId(req);
 
-            writer.write(objectMapper.writeValueAsString(directorDtos));
-
-        } else {
             Optional<DirectorDto> directorDto = directorService.findById(id);
 
             if (directorDto.isPresent()) {
@@ -60,12 +55,17 @@ public class DirectorServlet extends HttpServlet {
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
+        } catch (NumberFormatException e){
+
+            List<DirectorDto> directorDtos = directorService.findAll();
+
+            writer.write(objectMapper.writeValueAsString(directorDtos));
         }
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String body = ServletsUtil.extractBody(req);
+        String body = extractBody(req);
 
         PrintWriter writer = resp.getWriter();
 
@@ -93,35 +93,35 @@ public class DirectorServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long id = ServletsUtil.getId(req);
 
-        if (id == -1) {
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        } else {
+        try {
+            Long id = getId(req);
             boolean statusDelete = directorService.delete(id);
             if (statusDelete) {
                 resp.setStatus(HttpServletResponse.SC_OK);
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
+        } catch (NumberFormatException e){
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long id = getId(req);
 
         String body = extractBody(req);
         PrintWriter writer = resp.getWriter();
         resp.setContentType(CONTENT_TYPE);
 
         try {
-            if (!body.isEmpty() && id != -1) {
+            Long id = getId(req);
+            if (!body.isEmpty()) {
 
                 DirectorDto updateDirector = objectMapper.readValue(body, DirectorDto.class);
-
                 updateDirector.setId(id);
                 writer.write(objectMapper.writeValueAsString(directorService.update(updateDirector)));
+
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
@@ -130,6 +130,8 @@ public class DirectorServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 writer.write(objectMapper.writeValueAsString(error));
             }
+        } catch (NumberFormatException e) {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 }

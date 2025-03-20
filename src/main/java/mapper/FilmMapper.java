@@ -1,5 +1,6 @@
 package mapper;
 
+import dto.DirectorDtoForFilm;
 import dto.FilmDto;
 import entity.Country;
 import entity.Director;
@@ -12,14 +13,10 @@ import java.time.format.DateTimeFormatter;
 public final class FilmMapper {
 
 
-    public FilmMapper() {
-        // this constructor is empty
-    }
-
     public FilmDto filmToFilmDto(Film film) {
 
         FilmDto filmDto = buildFilmDto(film);
-        filmDto.setDirectorDto(film.getDirector().getId());
+        filmDto.setDirectorDto(buildDirectorWithoutFilms(film.getDirector()));
 
         return filmDto;
     }
@@ -33,9 +30,9 @@ public final class FilmMapper {
                 LocalDate.parse(filmDto.getDateRealize(), DateTimeFormatter.ISO_LOCAL_DATE),
                 Genre.valueOf(filmDto.getGenre()),
                 new Director(
-                        filmDto.getDirectorDto(),
-                        null,
-                        null,
+                        filmDto.getDirectorDto().getId(),
+                        filmDto.getDirectorDto().getName(),
+                        LocalDate.parse(filmDto.getDirectorDto().getBirthDate(), DateTimeFormatter.ISO_LOCAL_DATE),
                         null
                 )
         );
@@ -58,4 +55,13 @@ public final class FilmMapper {
             return new FilmDto();
         }
     }
+
+    public DirectorDtoForFilm buildDirectorWithoutFilms(Director director) {
+        return new DirectorDtoForFilm(
+                director.getId(),
+                director.getName(),
+                director.getBirthDate().format(DateTimeFormatter.ISO_LOCAL_DATE)
+        );
+    }
+
 }

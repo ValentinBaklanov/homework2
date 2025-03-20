@@ -10,18 +10,18 @@ public class FilmDto {
     private String country;
     private String dateRealize;
     private String genre;
-    private Long idDirectorDto;
+    private DirectorDtoForFilm directorDto;
 
     public FilmDto() {
     }
 
-    public FilmDto(Long id, String nameFilm, String country, String dateRealize, String genre, Long idDirectorDto) {
+    public FilmDto(Long id, String nameFilm, String country, String dateRealize, String genre, DirectorDtoForFilm directorDto) {
         this.id = id;
         this.nameFilm = nameFilm;
         this.country = country;
         this.dateRealize = dateRealize;
         this.genre = genre;
-        this.idDirectorDto = idDirectorDto;
+        this.directorDto = directorDto;
     }
 
     public Long getId() {
@@ -64,12 +64,12 @@ public class FilmDto {
         this.genre = genre;
     }
 
-    public Long getDirectorDto() {
-        return idDirectorDto;
+    public DirectorDtoForFilm getDirectorDto() {
+        return directorDto;
     }
 
-    public void setDirectorDto(Long idDirectorDto) {
-        this.idDirectorDto = idDirectorDto;
+    public void setDirectorDto(DirectorDtoForFilm directorDto) {
+        this.directorDto = directorDto;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class FilmDto {
                ", country='" + country + '\'' +
                ", dateRealize='" + dateRealize + '\'' +
                ", genre='" + genre + '\'' +
-               ", idDirectorDto=" + idDirectorDto +
+               ", directorDto=" + directorDto +
                '}';
     }
 }

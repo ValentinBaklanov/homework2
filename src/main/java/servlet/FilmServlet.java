@@ -36,16 +36,11 @@ public class FilmServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Long id = getId(req);
         resp.setContentType(CONTENT_TYPE);
         PrintWriter writer = resp.getWriter();
-        if (id == -1L) {
+        try {
 
-            List<FilmDto> filmDtos = filmService.findAll();
-
-            writer.write(objectMapper.writeValueAsString(filmDtos));
-
-        } else {
+            Long id = getId(req);
 
             Optional<FilmDto> filmDto = filmService.findById(id);
 
@@ -58,6 +53,11 @@ public class FilmServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
             }
+        } catch (NumberFormatException e) {
+
+            List<FilmDto> filmDtos = filmService.findAll();
+
+            writer.write(objectMapper.writeValueAsString(filmDtos));
 
         }
     }
@@ -65,14 +65,13 @@ public class FilmServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Long id = getId(req);
-
         String body = extractBody(req);
         PrintWriter writer = resp.getWriter();
         resp.setContentType(CONTENT_TYPE);
 
         try {
-            if (!body.isEmpty() && id != -1) {
+            Long id = getId(req);
+            if (!body.isEmpty()) {
 
                 FilmDto updateFilm = objectMapper.readValue(body, FilmDto.class);
 
@@ -92,6 +91,8 @@ public class FilmServlet extends HttpServlet {
                 writer.write(objectMapper.writeValueAsString(error));
 
             }
+        } catch (NumberFormatException e) {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
@@ -128,14 +129,9 @@ public class FilmServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long id = getId(req);
-
-
-        if (id == -1) {
-
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-        } else {
+        
+        try {
+            Long id = getId(req);
 
             boolean statusDelete = filmService.delete(id);
 
@@ -148,6 +144,9 @@ public class FilmServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
             }
+        } catch (NumberFormatException e){
+
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 

@@ -1,6 +1,7 @@
 package util;
 
 import dto.DirectorDto;
+import dto.DirectorDtoForFilm;
 import dto.FilmDto;
 import entity.Country;
 import entity.Director;
@@ -25,7 +26,11 @@ public final class ObjectsForTest {
             "CANADA",
             LocalDate.now().toString(),
             "DRAMA",
-            DIRECTOR_DTO_1.getId()
+            new DirectorDtoForFilm(
+                    DIRECTOR_DTO_1.getId(),
+                    DIRECTOR_DTO_1.getName(),
+                    DIRECTOR_DTO_1.getBirthDate()
+            )
     );
     public static final Director DIRECTOR_1 = new Director(
             4L,
@@ -60,7 +65,11 @@ public final class ObjectsForTest {
             "JAPAN",
             LocalDate.now().toString(),
             "ACTION",
-            DIRECTOR_2.getId()
+            new DirectorDtoForFilm(
+                    DIRECTOR_DTO_2.getId(),
+                    DIRECTOR_DTO_2.getName(),
+                    DIRECTOR_DTO_2.getBirthDate()
+            )
     );
 
     public static final Film FILM_1 = new Film(

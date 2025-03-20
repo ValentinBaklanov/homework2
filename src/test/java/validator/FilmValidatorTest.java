@@ -1,5 +1,6 @@
 package validator;
 
+import dto.DirectorDtoForFilm;
 import dto.FilmDto;
 import entity.Country;
 import entity.Genre;
@@ -34,7 +35,11 @@ class FilmValidatorTest {
                 Country.JAPAN.toString(),
                 LocalDate.now().toString(),
                 Genre.DRAMA.name(),
-                1L
+                new DirectorDtoForFilm(
+                        1L,
+                        "Name",
+                        "1999-11-11"
+                )
         );
 
         ErrorValidation errorValidation = result.getErrors().getFirst();
@@ -61,7 +66,11 @@ class FilmValidatorTest {
                 null,
                 LocalDate.now().toString(),
                 Genre.DRAMA.name(),
-                1L
+                new DirectorDtoForFilm(
+                        1L,
+                        "Name",
+                        "1999-11-11"
+                )
         );
 
         ErrorValidation errorValidation = result.getErrors().getFirst();
@@ -82,7 +91,11 @@ class FilmValidatorTest {
                 Country.JAPAN.toString(),
                 "sdsf",
                 Genre.DRAMA.name(),
-                1L
+                new DirectorDtoForFilm(
+                        1L,
+                        "Name",
+                        "1999-11-11"
+                )
         );
 
         ErrorValidation errorValidation = result.getErrors().getFirst();
@@ -103,7 +116,11 @@ class FilmValidatorTest {
                 Country.JAPAN.toString(),
                 LocalDate.now().toString(),
                 "Genre.DRAMA.name()",
-                1L
+                new DirectorDtoForFilm(
+                        1L,
+                        "Name",
+                        "1999-11-11"
+                )
         );
 
         ErrorValidation errorValidation = result.getErrors().getFirst();

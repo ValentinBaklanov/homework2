@@ -3,13 +3,16 @@ package mapper;
 import dto.DirectorDto;
 import entity.Director;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static util.ObjectsForTest.*;
 
+@ExtendWith(MockitoExtension.class)
 class DirectorMapperTest {
 
-    private static final DirectorMapper directorMapper = new DirectorMapper();
+    private DirectorMapper directorMapper = new DirectorMapper();
 
     @Test
     void entityToDto() {

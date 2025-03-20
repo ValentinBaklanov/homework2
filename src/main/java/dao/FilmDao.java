@@ -8,53 +8,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static dao.SqlForFilm.*;
+
 public class FilmDao implements Dao<Long, Film> {
 
 
     private DataSource dataSource;
-
-    private static final String CREATE_SQL = """
-            INSERT INTO film (name_film, country, date_realize, genre, id_director)
-            VALUES (?, ?, ?, ?, ?)
-            """;
-    private static final String UPDATE_SQL = """
-            UPDATE film
-            SET name_film = ?,
-                country = ?,
-                date_realize = ?,
-                genre = ?,
-                id_director = ?
-            WHERE id_film = ?
-            """;
-    private static final String DELETE_SQL = """
-            DELETE FROM film
-            WHERE id_film = ?
-            """;
-    private static final String FIND_ALL_SQL = """
-            SELECT film.id_film,
-               name_film,
-               country,
-               date_realize,
-               genre,
-               d.id_director,
-               d.name_director,
-               d.birth_date_director
-            FROM film
-            INNER JOIN director d on film.id_director = d.id_director
-            """;
-    private static final String FIND_BY_ID = """
-            SELECT film.id_film,
-               name_film,
-               country,
-               date_realize,
-               genre,
-               d.id_director,
-               d.name_director,
-               d.birth_date_director
-            FROM film
-            INNER JOIN director d on film.id_director = d.id_director
-            WHERE film.id_film = ?
-            """;
 
 
     public FilmDao() {
@@ -70,7 +29,7 @@ public class FilmDao implements Dao<Long, Film> {
 
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_SQL, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_SQL.getQuery(), Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setObject(1, object.getNameFilm());
             preparedStatement.setObject(2, object.getCountry().name());
@@ -95,7 +54,7 @@ public class FilmDao implements Dao<Long, Film> {
     public Optional<Film> update(Film object) {
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL.getQuery())) {
 
             preparedStatement.setObject(1, object.getNameFilm());
             preparedStatement.setObject(2, object.getCountry().name());
@@ -118,7 +77,7 @@ public class FilmDao implements Dao<Long, Film> {
     public boolean delete(Long id) {
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SQL.getQuery())) {
 
             preparedStatement.setLong(1, id);
 
@@ -136,7 +95,7 @@ public class FilmDao implements Dao<Long, Film> {
     public Optional<Film> findById(Long id) {
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID.getQuery())) {
 
             preparedStatement.setLong(1, id);
 
@@ -166,7 +125,7 @@ public class FilmDao implements Dao<Long, Film> {
         Set<Film> films = new HashSet<>();
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatementFilms = connection.prepareStatement(FIND_ALL_SQL)) {
+             PreparedStatement preparedStatementFilms = connection.prepareStatement(FIND_ALL_SQL.getQuery())) {
 
             ResultSet resultSetFilms = preparedStatementFilms.executeQuery();
 

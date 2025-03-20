@@ -13,11 +13,7 @@ public final class ServletsUtil {
     public static Long getId(HttpServletRequest req) {
 
         String servletPath = String.valueOf(req.getRequestURI());
-        try {
-            return Long.parseLong(servletPath.substring(servletPath.lastIndexOf('/') + 1));
-        } catch (NumberFormatException e) {
-            return -1L;
-        }
+        return Long.parseLong(servletPath.substring(servletPath.lastIndexOf('/') + 1));
 
     }
 

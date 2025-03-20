@@ -15,6 +15,7 @@ public class ValidationResult {
         return errors.isEmpty();
     }
 
+
     public List<ErrorValidation> getErrors() {
         return errors;
     }
