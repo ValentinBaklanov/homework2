@@ -5,6 +5,7 @@ import dto.DirectorDtoForFilm;
 import dto.FilmDto;
 import entity.Director;
 import entity.Film;
+import jakarta.validation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -63,7 +64,13 @@ public class DirectorMapper {
     }
 
     public FilmDto buildFilmDto(Film film) {
-        try {
+
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
+        Set<ConstraintViolation<Film>> validate = validator.validate(film);
+
+        if (validate.isEmpty()) {
+
             FilmDto filmDto;
             filmDto = new FilmDto(
                     film.getId(),
@@ -74,9 +81,10 @@ public class DirectorMapper {
                     null
             );
             return filmDto;
-        } catch (NullPointerException e) {
+        } else {
             return new FilmDto();
         }
+
     }
 
 }

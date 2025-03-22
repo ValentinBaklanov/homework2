@@ -6,9 +6,13 @@ import entity.Country;
 import entity.Director;
 import entity.Film;
 import entity.Genre;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 
 public final class FilmMapper {
 
@@ -40,7 +44,12 @@ public final class FilmMapper {
 
 
     public FilmDto buildFilmDto(Film film) {
-        try {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
+        Set<ConstraintViolation<Film>> validate = validator.validate(film);
+
+        if (validate.isEmpty()) {
+
             FilmDto filmDto;
             filmDto = new FilmDto(
                     film.getId(),
@@ -51,7 +60,7 @@ public final class FilmMapper {
                     null
             );
             return filmDto;
-        } catch (NullPointerException e) {
+        } else {
             return new FilmDto();
         }
     }

@@ -1,15 +1,25 @@
 package entity;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 import java.util.Objects;
+
 
 public class Film {
 
     private Long id;
+    @NotNull
+    @NotBlank
     private String nameFilm;
+    @NotNull
     private Country country;
+    @NotNull
     private LocalDate dateRealize;
+    @NotNull
     private Genre genre;
+    @NotNull
     private Director director;
 
     public Film(Long id, String nameFilm, Country country, LocalDate dateRealize, Genre genre, Director director) {
