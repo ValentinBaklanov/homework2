@@ -64,16 +64,6 @@ public class DirectorService {
 
     public DirectorDto update(DirectorDto updateDirector) {
 
-
-        Optional<DirectorDto> oldDirector = directorDao.findById(updateDirector.getId())
-                .map(directorMapper::directorToDirectorDto);
-
-        if (oldDirector.isPresent()) {
-            updateDirector = setDirectorChangingFieldsByUpdate(oldDirector.get(), updateDirector);
-        } else {
-            throw new RuntimeException("Invalid ID director change the request");
-        }
-
         ValidationResult validate = directorValidator.validate(updateDirector);
 
         if (!validate.isValid()) {
@@ -91,17 +81,5 @@ public class DirectorService {
         }
 
     }
-
-    private DirectorDto setDirectorChangingFieldsByUpdate(DirectorDto directorDto, DirectorDto updateDirector) {
-
-        updateDirector.setName(updateDirector.getName() == null
-                ? directorDto.getName()
-                : updateDirector.getName());
-        updateDirector.setBirthDate(updateDirector.getBirthDate() == null
-                ? directorDto.getBirthDate()
-                : updateDirector.getBirthDate());
-
-        return updateDirector;
-
-    }
+    
 }

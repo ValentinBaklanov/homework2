@@ -47,15 +47,6 @@ public class FilmService {
 
     public FilmDto update(FilmDto updateFilm) {
 
-        Optional<FilmDto> filmOld = filmDao.findById(updateFilm.getId())
-                .map(filmMapper::filmToFilmDto);
-
-        if (filmOld.isPresent()) {
-            updateFilm = setFilmChangingFieldsByUpdate(filmOld.get(), updateFilm);
-        } else {
-            throw new RuntimeException("Invalid ID film change the request");
-        }
-
         ValidationResult result = filmValidator.validate(updateFilm);
 
         if (!result.isValid()) {
@@ -94,23 +85,4 @@ public class FilmService {
         return filmDao.delete(id);
     }
 
-    private FilmDto setFilmChangingFieldsByUpdate(FilmDto filmOld, FilmDto updateFilm) {
-
-        updateFilm.setNameFilm(updateFilm.getNameFilm() == null
-                ? filmOld.getNameFilm()
-                : updateFilm.getNameFilm());
-        updateFilm.setCountry(updateFilm.getCountry() == null
-                ? filmOld.getCountry()
-                : updateFilm.getCountry());
-        updateFilm.setDateRealize(updateFilm.getDateRealize() == null
-                ? filmOld.getDateRealize()
-                : updateFilm.getDateRealize());
-        updateFilm.setGenre(updateFilm.getGenre() == null
-                ? filmOld.getGenre()
-                : updateFilm.getGenre());
-
-
-        return updateFilm;
-
-    }
 }

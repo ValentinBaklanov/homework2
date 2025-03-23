@@ -82,7 +82,6 @@ class DirectorServiceTest {
     @Test
     void updateDirectorOK() {
 
-        Mockito.doReturn(Optional.of(DIRECTOR_1)).when(directorDao).findById(DIRECTOR_DTO_1.getId());
         Mockito.doReturn(DIRECTOR_DTO_1).when(directorMapper).directorToDirectorDto(DIRECTOR_1);
         Mockito.doReturn(new ValidationResult()).when(directorValidator).validate(DIRECTOR_DTO_1);
         Mockito.doReturn(DIRECTOR_1).when(directorMapper).directorDtoToDirector(DIRECTOR_DTO_1);
@@ -95,7 +94,6 @@ class DirectorServiceTest {
     @Test
     void updateWithWrongID() {
 
-        Mockito.doReturn(Optional.empty()).when(directorDao).findById(DIRECTOR_DTO_1.getId());
 
         assertThrows(RuntimeException.class,
                 () -> directorService.update(DIRECTOR_DTO_1));
@@ -108,8 +106,7 @@ class DirectorServiceTest {
         ValidationResult result = new ValidationResult();
         result.add(new ErrorValidation("error.DateRealize", "Date realize is invalid. Use pattern yyyy-MM-dd"));
 
-        Mockito.doReturn(Optional.of(DIRECTOR_1)).when(directorDao).findById(DIRECTOR_1.getId());
-        Mockito.doReturn(DIRECTOR_DTO_1).when(directorMapper).directorToDirectorDto(DIRECTOR_1);
+
         Mockito.doReturn(result).when(directorValidator).validate(DIRECTOR_DTO_1);
 
         assertThrows(ValidationException.class,
@@ -120,8 +117,7 @@ class DirectorServiceTest {
     void updateIfSomethingWrongWithDB() {
 
 
-        Mockito.doReturn(Optional.of(DIRECTOR_1)).when(directorDao).findById(DIRECTOR_1.getId());
-        Mockito.doReturn(DIRECTOR_DTO_1).when(directorMapper).directorToDirectorDto(DIRECTOR_1);
+
         Mockito.doReturn(new ValidationResult()).when(directorValidator).validate(DIRECTOR_DTO_1);
         Mockito.doReturn(DIRECTOR_1).when(directorMapper).directorDtoToDirector(DIRECTOR_DTO_1);
         Mockito.doReturn(Optional.empty()).when(directorDao).update(DIRECTOR_1);
@@ -133,14 +129,14 @@ class DirectorServiceTest {
     @Test
     void updateWhenIDOkAndEmptyBody() {
         DirectorDto updateDirector = new DirectorDto(DIRECTOR_DTO_1.getId(), null, null, new ArrayList<>());
+        ValidationResult validationResult = new ValidationResult();
+        validationResult.add(new ErrorValidation("error.nameDirector", "Name director is invalid"));
 
-        Mockito.doReturn(Optional.of(DIRECTOR_1)).when(directorDao).findById(updateDirector.getId());
-        Mockito.doReturn(DIRECTOR_DTO_1).when(directorMapper).directorToDirectorDto(DIRECTOR_1);
-        Mockito.doReturn(new ValidationResult()).when(directorValidator).validate(DIRECTOR_DTO_1);
-        Mockito.doReturn(DIRECTOR_1).when(directorMapper).directorDtoToDirector(DIRECTOR_DTO_1);
-        Mockito.doReturn(Optional.of(DIRECTOR_1)).when(directorDao).update(DIRECTOR_1);
+        Mockito.doReturn(validationResult)
+                .when(directorValidator).validate(updateDirector);
 
-        assertThat(directorService.update(updateDirector)).isEqualTo(DIRECTOR_DTO_1);
+
+        assertThrows(ValidationException.class, () -> directorService.update(updateDirector));
     }
 
     @Test

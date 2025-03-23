@@ -88,7 +88,7 @@ class FilmServiceTest {
     @Test
     void updateFilmOK() {
 
-        Mockito.doReturn(Optional.of(FILM_1)).when(filmDao).findById(FILM_1.getId());
+
         Mockito.doReturn(FILM_DTO_1).when(filmMapper).filmToFilmDto(FILM_1);
         Mockito.doReturn(new ValidationResult()).when(filmValidator).validate(FILM_DTO_1);
         Mockito.doReturn(FILM_1).when(filmMapper).filmDtoToFilm(FILM_DTO_1);
@@ -102,7 +102,6 @@ class FilmServiceTest {
     @Test
     void updateWithWrongID() {
 
-        Mockito.doReturn(Optional.empty()).when(filmDao).findById(FILM_DTO_1.getId());
 
         assertThrows(RuntimeException.class,
                 () -> filmService.update(FILM_DTO_1));
@@ -115,8 +114,6 @@ class FilmServiceTest {
         ValidationResult result = new ValidationResult();
         result.add(new ErrorValidation("error.Country", "Country is invalid"));
 
-        Mockito.doReturn(Optional.of(FILM_1)).when(filmDao).findById(FILM_1.getId());
-        Mockito.doReturn(FILM_DTO_1).when(filmMapper).filmToFilmDto(FILM_1);
         Mockito.doReturn(result).when(filmValidator).validate(FILM_DTO_1);
 
         assertThrows(ValidationException.class,
@@ -126,8 +123,7 @@ class FilmServiceTest {
     @Test
     void updateIfSomethingWrongWithDB() {
 
-        Mockito.doReturn(Optional.of(FILM_1)).when(filmDao).findById(FILM_1.getId());
-        Mockito.doReturn(FILM_DTO_1).when(filmMapper).filmToFilmDto(FILM_1);
+
         Mockito.doReturn(new ValidationResult()).when(filmValidator).validate(FILM_DTO_1);
         Mockito.doReturn(FILM_1).when(filmMapper).filmDtoToFilm(FILM_DTO_1);
         Mockito.doReturn(Optional.empty()).when(filmDao).update(FILM_1);
@@ -140,7 +136,6 @@ class FilmServiceTest {
     void updateWhenIDOkAndEmptyBody() {
         FilmDto updateFilmDto = new FilmDto(2L, null, null, null, null, null);
 
-        Mockito.doReturn(Optional.of(FILM_1)).when(filmDao).findById(updateFilmDto.getId());
         Mockito.doReturn(FILM_DTO_1).when(filmMapper).filmToFilmDto(FILM_1);
         Mockito.doReturn(new ValidationResult()).when(filmValidator).validate(FILM_DTO_1);
         Mockito.doReturn(FILM_1).when(filmMapper).filmDtoToFilm(FILM_DTO_1);

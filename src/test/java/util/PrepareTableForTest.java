@@ -11,21 +11,21 @@ public final class PrepareTableForTest {
     private static final String CREATE_DIRECTOR_TABLE = """
             CREATE TABLE director
             (
-                id_director BIGSERIAL PRIMARY KEY,
-                name_director VARCHAR(128) UNIQUE,
-                birth_date_director DATE
+                id_director BIGSERIAL PRIMARY KEY NOT NULL,
+                name_director VARCHAR(128) UNIQUE NOT NULL ,
+                birth_date_director DATE NOT NULL 
             );
             
             """;
     private static final String CREATE_FILM_TABLE = """
             CREATE TABLE film
             (
-                id_film BIGSERIAL PRIMARY KEY ,
-                name_film VARCHAR(128) UNIQUE ,
-                country VARCHAR(128),
-                date_realize DATE,
-                genre VARCHAR(32),
-                id_director BIGINT REFERENCES director(id_director) ON DELETE CASCADE
+                id_film BIGSERIAL PRIMARY KEY NOT NULL ,
+                name_film VARCHAR(128) UNIQUE NOT NULL ,
+                country VARCHAR(128) NOT NULL ,
+                date_realize DATE NOT NULL ,
+                genre VARCHAR(32) NOT NULL ,
+                id_director BIGINT REFERENCES director(id_director) ON DELETE CASCADE NOT NULL 
             );
             """;
 
